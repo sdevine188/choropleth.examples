@@ -22,6 +22,14 @@ county_choropleth(df, title = "2011 county unemployment rates", buckets = 1, leg
 ## choropleth using ggplot2
 
 counties_map <- map_data("county")
+## head(counties_map)
+
+## here is data from "maps" package with fips.state.county matched to county,state 
+## this can be used to match/add counties_map file to fips codes
+## see "maps" documentation
+
+data(county.fips)
+head(county.fips)
 
 ggplot(states, aes(map_id = state)) +
         geom_map(aes(fill = value), map = counties_map) +
