@@ -47,12 +47,12 @@ choropleth_input <- choropleth
 state_map_input <- state_map
 
 ggplot(data = choropleth_input, aes(x = long, y = lat, group = group)) +
-        geom_polygon(aes(fill = rate_d), colour = alpha("white", 1/2), size = 0.2) + 
+        geom_polygon(aes(fill = rate_d2), colour = alpha("white", 1/2), size = 0.2) + 
         geom_polygon(data = state_map_input, colour = "black", fill = NA) +
         scale_fill_brewer(palette = "Blues") + theme_bw() + theme(plot.background = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), panel.border = element_blank(), axis.ticks.y = element_blank(), axis.text.y = element_blank(), 
          axis.ticks.x = element_blank(), axis.text.x = element_blank(), plot.title=element_text(size=20,face="bold")) + 
-        labs(x="", y="", title="Unemployment rate in U.S") + coord_fixed() + coord_map(project="conic", lat0 = 30)
+        labs(x = "", y = "", title = "Unemployment rate in U.S", fill = "Unemployment rate") + coord_fixed() + coord_map(project = "conic", lat0 = 30)
 
 # create choropleth of just counties in alabama
 # filter choropleth and state_map down to just alabama rows
@@ -64,8 +64,8 @@ ggplot(data = choropleth_input, aes(x = long, y = lat, group = group)) +
         geom_polygon(data = state_map_input, colour = "black", fill = NA) +
         scale_fill_brewer(palette = "Blues") + theme_bw() + theme(plot.background = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), panel.border = element_blank(), axis.ticks.y = element_blank(), axis.text.y = element_blank(), 
-        axis.ticks.x = element_blank(), axis.text.x = element_blank(), plot.title=element_text(size=20,face="bold")) + 
-        labs(x="", y="", title="Unemployment rate in Alabama") + coord_fixed() + coord_map(project="conic", lat0 = 30)
+        axis.ticks.x = element_blank(), axis.text.x = element_blank(), plot.title = element_text(size=20, face = "bold")) + 
+        labs(x = "", y = "", title = "Unemployment rate in Alabama", fill = "Unemployment rate") + coord_fixed() + coord_map(project = "conic", lat0 = 30)
 
 # create choropleth of just EDA Denver Regional Office states
 choropleth_input <- filter(choropleth, region == "montana" | region == "north dakota" | region == "south dakota" | region == "wyoming" | region == "colorado" | 
@@ -79,6 +79,7 @@ ggplot(data = choropleth_input, aes(x = long, y = lat, group = group)) +
         scale_fill_brewer(palette = "Blues") + theme_bw() + theme(plot.background = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), panel.border = element_blank(), axis.ticks.y = element_blank(), axis.text.y = element_blank(), 
         axis.ticks.x = element_blank(), axis.text.x = element_blank(), plot.title=element_text(size=20,face="bold")) + 
-        labs(x="", y="", title="Unemployment rate in Denver Region Office") + coord_fixed() + coord_map(project="conic", lat0 = 30)
+        labs(x = "", y = "", title = "Unemployment rate in Denver Region Office", fill = "Unemployment rate") + coord_fixed() + 
+        coord_map(project = "conic", lat0 = 30)
 
 
