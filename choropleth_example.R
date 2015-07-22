@@ -4,6 +4,7 @@ library(datasets)
 library(maps)
 library(stringr)
 library(scales)
+library(RColorBrewer)
 
 # load lat/long map data for county and state boundaries
 county_map <- map_data("county")
@@ -31,14 +32,23 @@ choropleth <- merge(county_df, unemp, by = "fips")
 
 # create discretized unemployment rate to use with color brewer
 choropleth <- choropleth[order(choropleth$order), ]
-choropleth$rate_d <- cut(choropleth$unemp, c(seq(from = 0, to = 12, by = 2), 35))
+choropleth$rate_d <- cut(choropleth$unemp, c(seq(from = 0, to = 34, by = 2)))
+
+# select color palette using brewer.pal
+# then use colorRampPalette to build a function "pal" which divides the palette by a given number of factors
+# display.brewer.all()
+colors <- brewer.pal(9, "Blues")
+pal <- colorRampPalette(colors)
+# pal is a function, which takes a number as it's argument eg. pal(14)
+# to generalize: pal(length(unique(choropleth$rate_d1)))
 
 # clean up discrete unemployment rate buckets for use in legend
 choropleth$rate_d2 <- str_replace(choropleth$rate_d, "\\(", "")
 choropleth$rate_d2 <- str_replace(choropleth$rate_d2, "\\]", "")
 choropleth$rate_d2 <- str_replace(choropleth$rate_d2, ",", "% - ")
 choropleth$rate_d2 <- str_c(choropleth$rate_d2, "%", sep = "")
-levels <- c("0% - 2%", "2% - 4%", "4% - 6%", "6% - 8%", "8% - 10%", "10% - 12%", "12% - 35%")
+levels <- c("0% - 2%", "2% - 4%", "4% - 6%", "6% - 8%", "8% - 10%", "10% - 12%", "12% - 14%", "14% - 16%",
+            "16% - 18%", "18% - 20%", "20% - 22%", "22% - 24%", "24% - 26%", "26% - 32%")
 choropleth$rate_d2 <- factor(choropleth$rate_d2, levels = levels, ordered = TRUE)
 
 # create choropleth of all counties in US
@@ -49,7 +59,7 @@ state_map_input <- state_map
 ggplot(data = choropleth_input, aes(x = long, y = lat, group = group)) +
         geom_polygon(aes(fill = rate_d2), colour = alpha("white", 1/2), size = 0.2) + 
         geom_polygon(data = state_map_input, colour = "black", fill = NA) +
-        scale_fill_brewer(palette = "Blues") + theme_bw() + theme(plot.background = element_blank(), panel.grid.major = element_blank(),
+        scale_fill_manual(values = pal(length(unique(choropleth_input$rate_d2)))) + theme_bw() + theme(plot.background = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), panel.border = element_blank(), axis.ticks.y = element_blank(), axis.text.y = element_blank(), 
          axis.ticks.x = element_blank(), axis.text.x = element_blank(), plot.title=element_text(size=20,face="bold")) + 
         labs(x = "", y = "", title = "Unemployment rate in U.S", fill = "Unemployment rate") + coord_fixed() + coord_map(project = "conic", lat0 = 30)
@@ -62,7 +72,7 @@ state_map_input <- filter(state_map, region == "alabama")
 ggplot(data = choropleth_input, aes(x = long, y = lat, group = group)) +
         geom_polygon(aes(fill = rate_d2), colour = alpha("white", 1/2), size = 0.2) + 
         geom_polygon(data = state_map_input, colour = "black", fill = NA) +
-        scale_fill_brewer(palette = "Blues") + theme_bw() + theme(plot.background = element_blank(), panel.grid.major = element_blank(),
+        scale_fill_manual(values = pal(length(unique(choropleth_input$rate_d2)))) + theme_bw() + theme(plot.background = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), panel.border = element_blank(), axis.ticks.y = element_blank(), axis.text.y = element_blank(), 
         axis.ticks.x = element_blank(), axis.text.x = element_blank(), plot.title = element_text(size=20, face = "bold")) + 
         labs(x = "", y = "", title = "Unemployment rate in Alabama", fill = "Unemployment rate") + coord_fixed() + coord_map(project = "conic", lat0 = 30)
@@ -76,7 +86,7 @@ state_map_input <- filter(state_map, region == "montana" | region == "north dako
 ggplot(data = choropleth_input, aes(x = long, y = lat, group = group)) +
         geom_polygon(aes(fill = rate_d2), colour = alpha("white", 1/2), size = 0.2) + 
         geom_polygon(data = state_map_input, colour = "black", fill = NA) +
-        scale_fill_brewer(palette = "Blues") + theme_bw() + theme(plot.background = element_blank(), panel.grid.major = element_blank(),
+        scale_fill_manual(values = pal(length(unique(choropleth_input$rate_d2)))) + theme_bw() + theme(plot.background = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), panel.border = element_blank(), axis.ticks.y = element_blank(), axis.text.y = element_blank(), 
         axis.ticks.x = element_blank(), axis.text.x = element_blank(), plot.title=element_text(size=20,face="bold")) + 
         labs(x = "", y = "", title = "Unemployment rate in Denver Region Office", fill = "Unemployment rate") + coord_fixed() + 
